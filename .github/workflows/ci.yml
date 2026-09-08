@@ -36,7 +36,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           submodules: recursive
-          lfs: true
+          lfs: false
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
@@ -51,6 +51,17 @@ jobs:
         run: |
           yes | sdkmanager --licenses >/dev/null || true
           sdkmanager "ndk;26.1.10909125" "cmake;3.22.1" "platforms;android-34" "build-tools;34.0.0"
+
+      - name: Ensure Whisper model is a real binary
+        run: |
+          MODEL="app/src/main/assets/models/ggml-tiny.en-q5_1.bin"
+          SIZE=$(wc -c < "$MODEL" | tr -d ' ')
+          echo "model bytes=$SIZE"
+          if [ "$SIZE" -lt 1000000 ]; then
+            echo "LFS pointer detected — downloading ggml-tiny.en-q5_1.bin"
+            curl -fL --retry 5 -o "$MODEL"               "https://media.githubusercontent.com/media/Sh4nkR/VoxWolfDictation/main/app/src/main/assets/models/ggml-tiny.en-q5_1.bin"
+            ls -lh "$MODEL"
+          fi
 
       - name: Make wrapper executable
         run: chmod +x gradlew
