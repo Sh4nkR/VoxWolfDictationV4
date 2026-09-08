@@ -47,7 +47,7 @@ class Stitcher {
 
         val seam = findLongestCommonSubsequence(tail, head)
 
-        if (seam != null && seam.length >= 2) {
+        if (seam != null && seam.size >= 2) {
             // Found a seam — join at it, dropping the duplicate
             // Remove trailing words that are part of the seam from committed
             val commitWords = existingWords.toMutableList()

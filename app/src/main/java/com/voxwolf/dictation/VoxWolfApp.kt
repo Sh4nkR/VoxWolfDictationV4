@@ -14,7 +14,7 @@ import com.voxwolf.dictation.telemetry.Telemetry
  * - Telemetry (single emitter for the process)
  * - Notification channel creation
  */
-class VoxWolfApp : Application() {
+open class VoxWolfApp : Application() {
 
     lateinit var sessionBuffer: SessionBuffer
         private set
