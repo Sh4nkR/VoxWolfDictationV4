@@ -74,33 +74,37 @@ jobs:
           mkdir -p dist
           APK=$(find app/build/outputs/apk -name "*.apk" | head -n 1)
           test -n "$APK"
-          cp "$APK" dist/VoxWolfDictation-4.1.0.apk
-          ls -lh dist/VoxWolfDictation-4.1.0.apk
+          cp "$APK" dist/VoxWolfDictation-4.1.1.apk
+          ls -lh dist/VoxWolfDictation-4.1.1.apk
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
-          name: VoxWolfDictation-4.1.0
-          path: dist/VoxWolfDictation-4.1.0.apk
+          name: VoxWolfDictation-4.1.1
+          path: dist/VoxWolfDictation-4.1.1.apk
           if-no-files-found: error
 
       - name: Publish GitHub Release
         if: github.event_name != 'pull_request'
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: v4.1.0
-          name: VoxWolf Dictation 4.1.0
-          files: dist/VoxWolfDictation-4.1.0.apk
+          tag_name: v4.1.1
+          name: VoxWolf Dictation 4.1.1
+          files: dist/VoxWolfDictation-4.1.1.apk
           fail_on_unmatched_files: true
           make_latest: true
           body: |
             Sideload APK for Android 12+ (arm64). Debug-signed so you can install it without a Play Store listing.
 
+            **Fix in 4.1.1**
+            Model Ready no longer stays red forever. The transcription model is copied automatically on the setup screen, so Start VoxWolf can actually enable.
+
             **On your phone**
-            1. Open this release and tap `VoxWolfDictation-4.1.0.apk`
-            2. Allow install from this browser / Files if Android asks
-            3. Open the app and complete onboarding: microphone, draw-over-apps, accessibility
-            4. Tap Start VoxWolf
+            1. Uninstall the previous VoxWolf build if Android blocks the update
+            2. Open this release and tap `VoxWolfDictation-4.1.1.apk`
+            3. Allow install from this browser / Files if Android asks
+            4. Open the app — wait until Model Ready turns green (a few seconds)
+            5. Tap Start VoxWolf
 
             Offline speech uses the bundled tiny.en Whisper model. No internet permission.
 
