@@ -1,0 +1,14 @@
+*.iml
+.gradle
+/local.properties
+/.idea
+.DS_Store
+/build
+/app/build
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+
+# Model binary tracked via LFS, but ignore if someone drops a raw copy
+# app/src/main/assets/models/*.bin is tracked by LFS

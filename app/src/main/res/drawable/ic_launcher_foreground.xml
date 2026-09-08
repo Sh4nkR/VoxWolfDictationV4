@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Adaptive icon foreground — wolf face centered in the safe zone -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- Wolf face centered (safe zone 66x66 within 108x108) -->
+    <group
+        android:translateX="29"
+        android:translateY="21">
+
+        <!-- Head -->
+        <path
+            android:fillColor="#FFFFFF"
+            android:pathData="M25,5 L7,22 L10,42 L20,48 L30,48 L40,42 L43,22 Z" />
+
+        <!-- Left ear -->
+        <path
+            android:fillColor="#FFFFFF"
+            android:pathData="M7,22 L12,3 L19,17 Z" />
+
+        <!-- Right ear -->
+        <path
+            android:fillColor="#FFFFFF"
+            android:pathData="M43,22 L38,3 L31,17 Z" />
+
+        <!-- Inner left ear -->
+        <path
+            android:fillColor="#B0BEC5"
+            android:pathData="M11,19 L14,8 L18,16 Z" />
+
+        <!-- Inner right ear -->
+        <path
+            android:fillColor="#B0BEC5"
+            android:pathData="M39,19 L36,8 L32,16 Z" />
+
+        <!-- Left eye -->
+        <path
+            android:fillColor="#1B5E20"
+            android:pathData="M17,22 Q19,19 22,22 Q19,24 17,22 Z" />
+
+        <!-- Right eye -->
+        <path
+            android:fillColor="#1B5E20"
+            android:pathData="M28,22 Q31,19 33,22 Q31,24 28,22 Z" />
+
+        <!-- Snout -->
+        <path
+            android:fillColor="#E0E0E0"
+            android:pathData="M17,30 Q25,41 33,30 Q28,28 25,29 Q22,28 17,30 Z" />
+
+        <!-- Nose -->
+        <path
+            android:fillColor="#333333"
+            android:pathData="M22,31 L25,29 L28,31 Q25,33 22,31 Z" />
+    </group>
+</vector>

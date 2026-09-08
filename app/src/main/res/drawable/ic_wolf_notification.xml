@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Notification small icon — monochrome wolf silhouette per Android guidelines -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!-- Simplified wolf head silhouette -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M12,2 L4,10 L5,20 L9,23 L15,23 L19,20 L20,10 Z
+                         M4,10 L6,3 L9,8 Z
+                         M20,10 L18,3 L15,8 Z" />
+</vector>

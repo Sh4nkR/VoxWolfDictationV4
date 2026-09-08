@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    SPEC §8.1 — Wolf face vector drawable.
+    Stylised wolf head: pointed ears, snout, clean geometric shapes.
+    Tinted per session state via PorterDuff.Mode.SRC_IN in WolfFaceView.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="56dp"
+    android:height="56dp"
+    android:viewportWidth="100"
+    android:viewportHeight="100">
+
+    <!-- Head outline — rounded triangle shape -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M50,10 L15,45 L20,85 L40,95 L60,95 L80,85 L85,45 Z" />
+
+    <!-- Left ear -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M15,45 L25,8 L38,35 Z" />
+
+    <!-- Right ear -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M85,45 L75,8 L62,35 Z" />
+
+    <!-- Inner left ear -->
+    <path
+        android:fillColor="#CCCCCC"
+        android:pathData="M22,38 L28,16 L36,33 Z" />
+
+    <!-- Inner right ear -->
+    <path
+        android:fillColor="#CCCCCC"
+        android:pathData="M78,38 L72,16 L64,33 Z" />
+
+    <!-- Snout / muzzle -->
+    <path
+        android:fillColor="#E0E0E0"
+        android:pathData="M35,60 Q50,82 65,60 Q55,55 50,58 Q45,55 35,60 Z" />
+
+    <!-- Nose -->
+    <path
+        android:fillColor="#333333"
+        android:pathData="M45,62 L50,58 L55,62 Q50,66 45,62 Z" />
+
+    <!-- Mouth line -->
+    <path
+        android:strokeColor="#666666"
+        android:strokeWidth="1.5"
+        android:pathData="M50,66 L50,72"
+        android:fillColor="#00000000" />
+
+    <!-- Left mouth curve -->
+    <path
+        android:strokeColor="#666666"
+        android:strokeWidth="1.5"
+        android:pathData="M50,72 Q42,76 38,73"
+        android:fillColor="#00000000" />
+
+    <!-- Right mouth curve -->
+    <path
+        android:strokeColor="#666666"
+        android:strokeWidth="1.5"
+        android:pathData="M50,72 Q58,76 62,73"
+        android:fillColor="#00000000" />
+</vector>

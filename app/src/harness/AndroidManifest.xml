@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Harness-only: broadcast receivers for ADB-driven test automation -->
+    <application
+        android:name=".HarnessApp"
+        tools:replace="android:name">
+        <receiver
+            android:name="com.voxwolf.dictation.harness.HarnessReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.voxwolf.HARNESS_SOURCE" />
+                <action android:name="com.voxwolf.HARNESS_BUBBLE_TAP" />
+                <action android:name="com.voxwolf.HARNESS_MIC_ON" />
+                <action android:name="com.voxwolf.HARNESS_MIC_OFF" />
+                <action android:name="com.voxwolf.HARNESS_CANCEL" />
+                <action android:name="com.voxwolf.HARNESS_DUMP" />
+                <action android:name="com.voxwolf.HARNESS_LONG_PRESS" />
+                <action android:name="com.voxwolf.HARNESS_INJECT_ERROR" />
+            </intent-filter>
+        </receiver>
+    </application>
+
+</manifest>
