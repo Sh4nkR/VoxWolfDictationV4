@@ -19,7 +19,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.voxwolf.dictation.R
-import com.voxwolf.dictation.VoxWolfApp
 import com.voxwolf.dictation.asr.ModelProvisioner
 import com.voxwolf.dictation.service.CaptureService
 
@@ -30,20 +29,22 @@ import com.voxwolf.dictation.service.CaptureService
  * 2. SYSTEM_ALERT_WINDOW (draw over other apps)
  * 3. Accessibility Service
  * 4. Battery optimisation exemption (optional)
- * 5. Model ready
+ * 5. Model ready — copied automatically on this screen, not gated on Start.
  *
  * Each step shows a description, current status, and a grant/enable/open button.
  * Once all required steps (1–3, 5) are satisfied, the CaptureService starts.
  */
 class OnboardingActivity : AppCompatActivity() {
 
-    // Step views
     private lateinit var stepViews: List<StepViewHolder>
     private lateinit var launchButton: Button
 
-    // Permission launcher
+    private var provisioning = false
+    private var lastProvisionError: String? = null
+    private var autoCopyAttempted = false
+
     private val micPermissionLauncher =
-        registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) {
             refreshSteps()
         }
 
@@ -58,7 +59,6 @@ class OnboardingActivity : AppCompatActivity() {
         }
         root.addView(container)
 
-        // Title
         val title = TextView(this).apply {
             text = getString(R.string.onboarding_title)
             textSize = 24f
@@ -68,7 +68,6 @@ class OnboardingActivity : AppCompatActivity() {
         }
         container.addView(title)
 
-        // Build the 5 steps
         stepViews = listOf(
             createStep(container, getString(R.string.step_record_audio), getString(R.string.step_record_audio_desc), getString(R.string.btn_grant)) {
                 micPermissionLauncher.launch(Manifest.permission.RECORD_AUDIO)
@@ -94,12 +93,11 @@ class OnboardingActivity : AppCompatActivity() {
                     startActivity(Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS))
                 }
             },
-            createStep(container, getString(R.string.step_model), getString(R.string.step_model_desc), null) {
-                // Model provisioning runs automatically
+            createStep(container, getString(R.string.step_model), getString(R.string.step_model_desc), getString(R.string.btn_copy_model)) {
+                startModelProvision()
             }
         )
 
-        // Samsung-specific battery card
         if (android.os.Build.MANUFACTURER.equals("samsung", ignoreCase = true)) {
             val samsungCard = TextView(this).apply {
                 text = getString(R.string.samsung_battery_card)
@@ -111,7 +109,6 @@ class OnboardingActivity : AppCompatActivity() {
             container.addView(samsungCard)
         }
 
-        // Launch button
         launchButton = Button(this).apply {
             text = "Start VoxWolf"
             isEnabled = false
@@ -127,6 +124,33 @@ class OnboardingActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         refreshSteps()
+        if (!autoCopyAttempted && !provisioning && !ModelProvisioner(this).isReady()) {
+            autoCopyAttempted = true
+            startModelProvision()
+        }
+    }
+
+    private fun startModelProvision() {
+        if (provisioning) return
+        if (ModelProvisioner(this).isReady()) {
+            lastProvisionError = null
+            refreshSteps()
+            return
+        }
+        provisioning = true
+        lastProvisionError = null
+        refreshSteps()
+        Thread {
+            val result = ModelProvisioner(this).provision()
+            runOnUiThread {
+                provisioning = false
+                lastProvisionError = when (result) {
+                    is ModelProvisioner.ProvisionResult.Error -> result.code
+                    is ModelProvisioner.ProvisionResult.Success -> null
+                }
+                refreshSteps()
+            }
+        }.start()
     }
 
     private fun refreshSteps() {
@@ -135,24 +159,19 @@ class OnboardingActivity : AppCompatActivity() {
         ) == PackageManager.PERMISSION_GRANTED
 
         val overlayGranted = Settings.canDrawOverlays(this)
-
         val a11yEnabled = isAccessibilityServiceEnabled()
-
         val batteryOptimised = isBatteryOptimised()
-
-        val modelReady = isModelReady()
+        val modelReady = ModelProvisioner(this).isReady()
 
         updateStep(0, micGranted, required = true)
         updateStep(1, overlayGranted, required = true)
         updateStep(2, a11yEnabled, required = true)
         updateStep(3, batteryOptimised, required = false)
-        updateStep(4, modelReady, required = true)
+        updateModelStep(modelReady)
 
-        // All required steps satisfied?
         val allRequired = micGranted && overlayGranted && a11yEnabled && modelReady
         launchButton.isEnabled = allRequired
 
-        // Auto-start if returning after granting everything
         if (allRequired && intent.getBooleanExtra("auto_start", false)) {
             launchService()
         }
@@ -172,6 +191,38 @@ class OnboardingActivity : AppCompatActivity() {
                 if (required) 0xFFF44336.toInt() else 0xFFFFC107.toInt()
             )
             holder.actionButton?.isEnabled = true
+        }
+    }
+
+    private fun updateModelStep(ready: Boolean) {
+        val holder = stepViews[4]
+        val button = holder.actionButton
+        when {
+            provisioning -> {
+                holder.statusText.text = getString(R.string.status_copying)
+                holder.statusText.setTextColor(0xFFFFC107.toInt())
+                button?.isEnabled = false
+                button?.text = getString(R.string.status_copying)
+            }
+            ready -> {
+                holder.statusText.text = getString(R.string.status_ready)
+                holder.statusText.setTextColor(0xFF4CAF50.toInt())
+                button?.isEnabled = false
+                button?.text = getString(R.string.btn_copy_model)
+            }
+            else -> {
+                val err = lastProvisionError
+                holder.statusText.text = if (err != null) {
+                    getString(R.string.status_model_failed) + " ($err)"
+                } else {
+                    getString(R.string.status_not_ready)
+                }
+                holder.statusText.setTextColor(0xFFF44336.toInt())
+                button?.isEnabled = true
+                button?.text = getString(
+                    if (err != null) R.string.btn_retry else R.string.btn_copy_model
+                )
+            }
         }
     }
 
@@ -196,29 +247,14 @@ class OnboardingActivity : AppCompatActivity() {
         return pm.isIgnoringBatteryOptimizations(packageName)
     }
 
-    private fun isModelReady(): Boolean {
-        val provisioner = ModelProvisioner(this)
-        return provisioner.modelPath != null
-    }
-
     private fun launchService() {
-        // Provision model in background if needed, then start the service
-        Thread {
-            val provisioner = ModelProvisioner(this)
-            val result = provisioner.provision()
-            if (result is ModelProvisioner.ProvisionResult.Success) {
-                runOnUiThread {
-                    val intent = Intent(this, CaptureService::class.java)
-                    startForegroundService(intent)
-                    // Move to background — user returns to their app
-                    moveTaskToBack(true)
-                }
-            } else {
-                runOnUiThread {
-                    refreshSteps()
-                }
-            }
-        }.start()
+        if (!ModelProvisioner(this).isReady()) {
+            startModelProvision()
+            return
+        }
+        val intent = Intent(this, CaptureService::class.java)
+        startForegroundService(intent)
+        moveTaskToBack(true)
     }
 
     private fun createStep(
