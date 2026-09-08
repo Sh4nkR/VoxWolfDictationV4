@@ -11,8 +11,8 @@ android {
         applicationId = "com.voxwolf.dictation"
         minSdk = 31
         targetSdk = 31
-        versionCode = 1
-        versionName = "4.1.0"
+        versionCode = 2
+        versionName = "4.1.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
