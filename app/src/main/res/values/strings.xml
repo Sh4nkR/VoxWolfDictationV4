@@ -18,16 +18,20 @@
     <string name="step_overlay_desc">Required to show the wolf bubble over other apps.</string>
     <string name="step_accessibility_desc">VoxWolf reads the focused text field to place the caret. Nothing leaves the device.</string>
     <string name="step_battery_desc">Prevents Android from killing the mic during long sessions. Optional but recommended.</string>
-    <string name="step_model_desc">Copies the transcription model to internal storage.</string>
+    <string name="step_model_desc">Copies the transcription model to internal storage. This happens automatically — wait a few seconds.</string>
     <string name="samsung_battery_card">For best results on Samsung, go to Settings → Battery → Background usage limits → Never sleeping apps and add VoxWolf.</string>
     <string name="btn_grant">Grant</string>
     <string name="btn_enable">Enable</string>
     <string name="btn_open_settings">Open Settings</string>
+    <string name="btn_copy_model">Copy model</string>
+    <string name="btn_retry">Retry</string>
     <string name="status_granted">Granted</string>
     <string name="status_denied">Not Granted</string>
     <string name="status_enabled">Enabled</string>
     <string name="status_disabled">Disabled</string>
     <string name="status_ready">Ready</string>
     <string name="status_not_ready">Not Ready</string>
+    <string name="status_copying">Copying…</string>
+    <string name="status_model_failed">Copy failed</string>
     <string name="status_advisory">Advisory</string>
 </resources>
