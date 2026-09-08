@@ -30,7 +30,7 @@ android {
 
     flavorDimensions += "channel"
     productFlavors {
-        create("release") {
+        create("prod") {
             dimension = "channel"
         }
         create("harness") {
