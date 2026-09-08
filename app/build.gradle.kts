@@ -20,6 +20,12 @@ android {
             abiFilters += "arm64-v8a"
         }
 
+        externalNativeBuild {
+            cmake {
+                arguments += "-DWHISPER_DIR=${rootProject.projectDir}/third_party/whisper.cpp"
+            }
+        }
+
         // Model SHA-256 digest — replace PLACEHOLDER with real digest after committing model via Git LFS
         buildConfigField(
             "String",
@@ -85,7 +91,6 @@ android {
         cmake {
             path = file("src/main/cpp/CMakeLists.txt")
             version = "3.22.1"
-            arguments += "-DWHISPER_DIR=${rootProject.projectDir}/third_party/whisper.cpp"
         }
     }
 
