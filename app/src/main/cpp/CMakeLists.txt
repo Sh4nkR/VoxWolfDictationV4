@@ -5,7 +5,10 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_C_STANDARD 11)
 
 # whisper.cpp source — built from the pinned submodule
-set(WHISPER_DIR "${CMAKE_SOURCE_DIR}/../../../../../third_party/whisper.cpp")
+# app/src/main/cpp -> repo root is four levels up
+if(NOT DEFINED WHISPER_DIR)
+    set(WHISPER_DIR "${CMAKE_SOURCE_DIR}/../../../../third_party/whisper.cpp")
+endif()
 
 # Flags per SPEC §4.8
 set(CMAKE_C_FLAGS_RELEASE "-O3 -DNDEBUG")

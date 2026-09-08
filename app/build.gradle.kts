@@ -85,6 +85,7 @@ android {
         cmake {
             path = file("src/main/cpp/CMakeLists.txt")
             version = "3.22.1"
+            arguments += "-DWHISPER_DIR=${rootProject.projectDir}/third_party/whisper.cpp"
         }
     }
 
